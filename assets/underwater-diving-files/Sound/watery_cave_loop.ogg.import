@@ -12,7 +12,7 @@ dest_files=["res://.godot/imported/watery_cave_loop.ogg-9a691c6fde9cffb86bf2d7a4
 
 [params]
 
-loop=false
+loop=true
 loop_offset=0
 bpm=0
 beat_count=0
