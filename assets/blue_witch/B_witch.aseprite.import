@@ -1,0 +1,14 @@
+[remap]
+
+importer="aseprite_wizard.plugin.noop"
+type="PackedDataContainer"
+uid="uid://dqaw4av427k1f"
+path="res://.godot/imported/B_witch.aseprite-8ceafc14e51340137d70c685c3f10b30.res"
+
+[deps]
+
+source_file="res://assets/blue_witch/B_witch.aseprite"
+dest_files=["res://.godot/imported/B_witch.aseprite-8ceafc14e51340137d70c685c3f10b30.res"]
+
+[params]
+

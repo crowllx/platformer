@@ -8,6 +8,17 @@ class_name GroundState
 func state_process(_delta):
     if(!character.is_on_floor()):
         next_state = "airbourne"
+        return
+    var direction = Input.get_axis("move_left","move_right")
+    if self is Idle && direction != 0:
+        next_state = "moving"
+    elif self is Moving && direction == 0:
+        next_state = "idle"
+    
+    if direction != 0:
+        character.velocity.x = direction * character.speed
+    else:
+        character.velocity.x = move_toward(character.velocity.x, 0, character.speed)
 
 func state_input(event : InputEvent):
     if(event.is_action_pressed("jump")):

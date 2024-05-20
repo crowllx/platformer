@@ -7,12 +7,12 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 @onready var animation_player = $AnimationPlayer
 @onready var animated_sprite = $AnimatedSprite2D
 @onready var statemachine = $StateMachine
-
+@onready var hitbox_pivot = %HitBoxPivot
 # character data
-const JUMP_VELOCITY = -500
+const JUMP_VELOCITY = -400
 @export var speed = 300
 @export var dash_speed = 1100
-var direction: float
+@export var direction: float
 
 func _ready():
     for anim in animation_player.get_animation_list():
@@ -21,27 +21,19 @@ func _ready():
 func update_flip():
     if direction == 1:
         animated_sprite.flip_h = false
+        hitbox_pivot.rotation = 0
     elif direction == -1:
         animated_sprite.flip_h = true
+        hitbox_pivot.rotation_degrees = -180
 func _physics_process(delta): 
-    # apply gravity
-    if not is_on_floor():
-        velocity.y += gravity*delta
 
-    if Input.is_action_pressed("jump"):
-        if is_on_floor():
-            velocity.y = JUMP_VELOCITY
-    if statemachine.current_state is DashState:
-        velocity.x = direction * dash_speed
-    else:
-        direction = Input.get_axis("move_left","move_right")
-    if direction != 0 && statemachine.check_if_can_move():
-        if statemachine.current_state is DashState:
-            velocity.x = direction * dash_speed
-        else:
-            velocity.x = direction * speed
-    else:
-        velocity.x = move_toward(velocity.x, 0, speed)
+    #if statemachine.current_state is DashState:
+    #    velocity.x = direction * dash_speed
+    #else:
+    direction = Input.get_axis("move_left","move_right")
+    # default gravity
+    if !statemachine.current_state is AirState && !statemachine.current_state is Attack:
+        velocity.y += gravity * delta
 
     move_and_slide()
     update_flip()
@@ -49,9 +41,9 @@ func _physics_process(delta):
 
 
 func update_animation():
-    #if !animation_player.is_playing() && is_on_floor():
-    #    if direction:
-    #        animation_player.play("run")
-    #    else:
-    #        animation_player.play("idle")
+    if is_on_floor():
+        if statemachine.current_state is Moving:
+            animation_player.play("run")
+        elif statemachine.current_state is Idle:
+            animation_player.play("idle")
     pass

@@ -6,6 +6,8 @@ var dash_cooldown := Timer.new()
 @export var dash_duration: float
 @export var dash_cd: float
 @export var dash_speed: float
+var direction = 0
+
 func _ready():
     dash.wait_time = 0.2
     dash.one_shot = true
@@ -19,10 +21,14 @@ func _ready():
 
 
 func state_process(_delta):
-    var _direction = Input.get_axis("move_left","move_right")
+    character.velocity.x = direction * character.dash_speed 
     
 
 func on_enter(_prev_state: State):
+    if character.animated_sprite.flip_h == true:
+        direction = -1
+    else:
+        direction = 1
     anim_player.play("dash")
     get_parent().can_dash = false
     dash.start()

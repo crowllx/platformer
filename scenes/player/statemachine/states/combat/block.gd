@@ -11,6 +11,8 @@ func state_process(_delta):
 
     if anim_player["current_animation"] != "block_start":
         anim_player.play("block")
+    character.velocity.y = 0
+    character.velocity.x = move_toward(character.velocity.x, 0, 50)
 
 func on_exit():
     anim_player.stop()

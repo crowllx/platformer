@@ -3,6 +3,7 @@ class_name Attack
 var attack_duration := Timer.new()
 var basic_attack_chain = Array(["attack1", "attack1", "attack2"])
 var chain_count = 0
+var chain: bool = false
 
 func _ready():
     attack_duration.one_shot = true
@@ -11,15 +12,19 @@ func _ready():
 
 func state_process(_delta):
     character.velocity.y = 0
+    character.velocity.x = move_toward(character.velocity.x, 0, 50)
     
 func state_input(event):
     var direction = Input.get_axis("move_left","move_right")
     if direction && event.is_action_pressed("dash"):
         attack_duration.stop()
         next_state = "dash"
-        #elif event.is_pressed("block")
-        #    attack_duration.stop()
-        #    next_state = block_state
+    elif event.is_action_pressed("block"):
+        attack_duration.stop()
+        next_state = "block"
+    elif event.is_action_pressed("attack") && attack_duration.time_left <= .2:
+         chain = true
+
 func on_enter(prev_state: State):
     print(prev_state)
     if prev_state is Block:
@@ -34,8 +39,13 @@ func on_enter(prev_state: State):
     print(chain_count)
 
 func on_exit():
-    pass
+    chain = false
 
 
 func _attack_end():
-    next_state = "idle" 
+    if chain:
+        next_state = "attack"
+    else:
+        next_state = "idle" 
+    anim_player.stop()
+    #anim_player.play("RESET")
